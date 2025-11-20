@@ -2,57 +2,32 @@ package com.warehouse.repository;
 
 import java.util.List;
 
-import com.warehouse.entity.Product;
+import com.warehouse.entity.Produk;
 
 public class ProductRespositoryImpl implements ProductRepository{
 
     @Override
-    public void addProduct(Product product) {
-        // TODO Auto-generated method stub
-        
+    public void addProduct(Produk produk) {
+
     }
 
     @Override
-    public Integer checkStock(String productId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
-    @Override
-    public void update(Product product) {
-        // TODO Auto-generated method stub
-        
+    public void update(Produk produk) {
+
     }
 
     @Override
     public void delete(String productId) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public List<Product> findAll() {
-        // TODO Auto-generated method stub
+    public Produk findById(String productId) {
         return null;
     }
 
     @Override
-    public List<Product> findByCategory() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Produk> findAll() {
+        return List.of();
     }
-
-    @Override
-    public Product findById(String productId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<Product> findBySupplier(String supplierId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
 }
