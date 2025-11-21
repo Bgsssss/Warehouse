@@ -2,6 +2,7 @@ package com.warehouse.view;
 
 import com.warehouse.entity.Pesanan;
 import com.warehouse.entity.RincianPesanan;
+import com.warehouse.service.PersediaanService;
 import com.warehouse.service.ProdukService;
 import com.warehouse.service.RincianPesananService;
 
@@ -14,12 +15,13 @@ public class RincianPesananView {
     Scanner input = new Scanner(System.in);
 
     private RincianPesananService rincianPesananService;
-
     private ProdukService produkService;
+    private PersediaanService persediaanService;
 
-    public RincianPesananView(RincianPesananService rincianPesananService, ProdukService produkService) {
+    public RincianPesananView(RincianPesananService rincianPesananService, ProdukService produkService, PersediaanService persediaanService) {
         this.rincianPesananService = rincianPesananService;
         this.produkService = produkService;
+        this.persediaanService = persediaanService;
     }
 
     public void tambahPesanan() {
@@ -28,6 +30,7 @@ public class RincianPesananView {
             int idPelanggan = Integer.parseInt(input.nextLine());
 
             List<RincianPesanan> items = new ArrayList<>();
+
             while (true) {
                 System.out.print("ID Produk: ");
                 String idProduk = input.nextLine();
@@ -47,12 +50,15 @@ public class RincianPesananView {
             Pesanan pesanan = new Pesanan();
             pesanan.setIdPelanggan(idPelanggan);
             pesanan.setTanggalPemesanan(LocalDateTime.now());
+
             rincianPesananService.tambahOrder(pesanan, items);
 
             System.out.println("Pesanan berhasil ditambahkan dengan ID: " + pesanan.getId() +
                     " | Total: " + pesanan.getJumlahTotal());
+
         } catch (Exception e) {
             System.out.println("Terjadi kesalahan: " + e.getMessage());
         }
     }
+
 }

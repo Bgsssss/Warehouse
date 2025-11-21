@@ -1,7 +1,9 @@
 package com.warehouse.service;
 
+import com.warehouse.entity.Persediaan;
 import com.warehouse.entity.Pesanan;
 import com.warehouse.entity.RincianPesanan;
+import com.warehouse.repository.PersediaanRepository;
 import com.warehouse.repository.PesananRepository;
 import com.warehouse.repository.ProdukRepository;
 import com.warehouse.repository.RincianPesananRepository;
@@ -13,12 +15,14 @@ public class RincianPesananServiceImpl implements RincianPesananService{
     private PesananRepository pesananRepository;
     private RincianPesananRepository rincianPesananRepository;
     private ProdukRepository produkRepository;
+    private PersediaanRepository persediaanRepository;
 
     public RincianPesananServiceImpl(PesananRepository pesananRepository, RincianPesananRepository rincianPesananRepository,
-                                     ProdukRepository produkRepository) {
+                                     ProdukRepository produkRepository, PersediaanRepository persediaanRepository) {
         this.pesananRepository = pesananRepository;
         this.rincianPesananRepository = rincianPesananRepository;
         this.produkRepository = produkRepository;
+        this.persediaanRepository = persediaanRepository;
     }
 
     @Override
@@ -45,6 +49,22 @@ public class RincianPesananServiceImpl implements RincianPesananService{
             d.setIdPesanan(pesanan.getId());
             d.setHarga(produkRepository.getHargaById(d.getIdProduk()));
             rincianPesananRepository.addRincianPesanan(d);
+
+            List<Persediaan> persediaanList = persediaanRepository.findByProduk(d.getIdProduk());
+            int sisa = d.getJumlah();
+            for (Persediaan p : persediaanList) {
+                if (sisa <= 0) break;
+                if (p.getJumlah() >= sisa) {
+                    persediaanRepository.updateStokById(p.getIdProduk(), sisa, p.getIdGudang());
+                    sisa = 0;
+                } else {
+                    persediaanRepository.updateStokById(p.getIdProduk(), p.getJumlah(), p.getIdGudang());
+                    sisa -= p.getJumlah();
+                }
+            }
+            if (sisa > 0) {
+                throw new IllegalStateException("Stok tidak cukup untuk produk " + d.getIdProduk());
+            }
         }
     }
 }

@@ -1,10 +1,7 @@
 package com.warehouse;
 
 import com.warehouse.repository.*;
-import com.warehouse.service.ProdukService;
-import com.warehouse.service.ProdukServiceImpl;
-import com.warehouse.service.RincianPesananService;
-import com.warehouse.service.RincianPesananServiceImpl;
+import com.warehouse.service.*;
 import com.warehouse.view.RincianPesananView;
 
 
@@ -17,8 +14,10 @@ public class App {
         PesananRepository pesananRepository = new PesananRepositoryImpl();
         RincianPesananRepository repository = new RincianPesananRepositoryImpl();
         ProdukRepository produkRepository = new ProdukRespositoryImpl();
-        RincianPesananService rincianPesananService = new RincianPesananServiceImpl(pesananRepository, repository, produkRepository);
+        PersediaanRepository persediaanRepository = new PersediaanRepositoryImpl();
+        RincianPesananService rincianPesananService = new RincianPesananServiceImpl(pesananRepository, repository, produkRepository, persediaanRepository);
         ProdukService produkService = new ProdukServiceImpl(produkRepository);
-        new RincianPesananView(rincianPesananService,produkService).tambahPesanan();
+        PersediaanService persediaanService = new PersediaanServiceImpl(persediaanRepository);
+        new RincianPesananView(rincianPesananService,produkService,persediaanService).tambahPesanan();
     }
 }
