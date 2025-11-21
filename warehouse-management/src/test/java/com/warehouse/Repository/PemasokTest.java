@@ -18,11 +18,11 @@ public class PemasokTest {
 
     private PemasokRepository pemasokRepository;
 
-    @BeforeEach
+    /*@BeforeEach
     void setUp() throws SQLException {
        connection = DatabaseUtil.getConnection();
        pemasokRepository = new PemasokRepositoryImpl(connection);
-    }
+    }*/
 
     @Test
     void addTest() {

@@ -9,9 +9,9 @@ import java.util.List;
 
 public class PemasokRepositoryImpl implements PemasokRepository {
 
-    //buat unit test doang
+    /*//buat unit test doang
     public PemasokRepositoryImpl(Connection connection) {
-    }
+    }*/
 
     @Override
     public void addPemasok(Pemasok pemasok) {

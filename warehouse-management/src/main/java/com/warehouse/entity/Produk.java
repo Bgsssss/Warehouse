@@ -2,17 +2,17 @@ package com.warehouse.entity;
 
 public class Produk {
 
-    String idProduk;
-    
-    String nama;
+    private String idProduk;
 
-    String deskripsi;
+    private String nama;
 
-    Integer harga;
+    private String deskripsi;
 
-    String category;
+    private Integer harga;
 
-    String idPemasok;
+    private String category;
+
+    private String idPemasok;
 
     public Produk() {
     }
@@ -74,4 +74,3 @@ public class Produk {
         this.idPemasok = idPemasok;
     }
 }
-

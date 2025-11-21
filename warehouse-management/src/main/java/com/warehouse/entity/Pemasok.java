@@ -2,13 +2,13 @@ package com.warehouse.entity;
 
 public class Pemasok {
 
-    String idPemasok;
+    private String idPemasok;
 
-    String nama;
+    private String nama;
 
-    String email;
+    private String email;
 
-    String namaKontak;
+    private String namaKontak;
 
     public Pemasok() {
     }
