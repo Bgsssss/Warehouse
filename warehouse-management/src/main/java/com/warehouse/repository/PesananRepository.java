@@ -1,6 +1,5 @@
 package com.warehouse.repository;
 
-import com.warehouse.entity.Pemasok;
 import com.warehouse.entity.Pesanan;
 
 import java.util.List;
