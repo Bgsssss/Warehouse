@@ -10,7 +10,7 @@ public interface PesananRepository {
 
     void update(Pesanan pesanan);
 
-    boolean delete(Integer id);
+    boolean deleteByPesananId(Integer id);
 
     Pesanan findById(Integer id);
 

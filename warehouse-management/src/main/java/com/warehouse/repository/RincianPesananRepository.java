@@ -8,7 +8,5 @@ public interface RincianPesananRepository {
 
     void addRincianPesanan(RincianPesanan rincianPesanan);
 
-    boolean deleteByPesananId(Integer id);
-
     List<RincianPesanan> findByPesananId(Integer idPesanan);
 }

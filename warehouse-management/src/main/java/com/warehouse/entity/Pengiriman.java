@@ -1,6 +1,7 @@
 package com.warehouse.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Pengiriman {
 
@@ -10,16 +11,19 @@ public class Pengiriman {
 
     private String idGudang;
 
-    private Date tanggalPengiriman;
+    private LocalDateTime tanggalPengiriman;
+
+    private String status;
 
     public Pengiriman() {
     }
 
-    public Pengiriman(Integer id, Integer idPesanan, String idGudang, Date tanggalPengiriman) {
+    public Pengiriman(Integer id, Integer idPesanan, String idGudang, LocalDateTime tanggalPengiriman, String status) {
         this.id = id;
         this.idPesanan = idPesanan;
         this.idGudang = idGudang;
         this.tanggalPengiriman = tanggalPengiriman;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -46,11 +50,19 @@ public class Pengiriman {
         this.idGudang = idGudang;
     }
 
-    public Date getTanggalPengiriman() {
+    public LocalDateTime getTanggalPengiriman() {
         return tanggalPengiriman;
     }
 
-    public void setTanggalPengiriman(Date tanggalPengiriman) {
+    public void setTanggalPengiriman(LocalDateTime tanggalPengiriman) {
         this.tanggalPengiriman = tanggalPengiriman;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

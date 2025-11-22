@@ -1,12 +1,10 @@
 package com.warehouse.service;
 
+import com.warehouse.entity.Pengiriman;
 import com.warehouse.entity.Persediaan;
 import com.warehouse.entity.Pesanan;
 import com.warehouse.entity.RincianPesanan;
-import com.warehouse.repository.PersediaanRepository;
-import com.warehouse.repository.PesananRepository;
-import com.warehouse.repository.ProdukRepository;
-import com.warehouse.repository.RincianPesananRepository;
+import com.warehouse.repository.*;
 
 import java.util.List;
 
@@ -16,13 +14,52 @@ public class RincianPesananServiceImpl implements RincianPesananService{
     private RincianPesananRepository rincianPesananRepository;
     private ProdukRepository produkRepository;
     private PersediaanRepository persediaanRepository;
+    private PengirimanRepository pengirimanRepository;
 
     public RincianPesananServiceImpl(PesananRepository pesananRepository, RincianPesananRepository rincianPesananRepository,
-                                     ProdukRepository produkRepository, PersediaanRepository persediaanRepository) {
+                                     ProdukRepository produkRepository, PersediaanRepository persediaanRepository,
+                                     PengirimanRepository pengirimanRepository) {
         this.pesananRepository = pesananRepository;
         this.rincianPesananRepository = rincianPesananRepository;
         this.produkRepository = produkRepository;
         this.persediaanRepository = persediaanRepository;
+        this.pengirimanRepository = pengirimanRepository;
+    }
+
+    @Override
+    public boolean deleteByPesananId(Integer id) {
+        if (id == null || id.describeConstable().isEmpty()){
+            throw new IllegalArgumentException("ID tidak boleh kosong");
+        }
+        return pesananRepository.deleteByPesananId(id);
+    }
+
+
+    @Override
+    public List<RincianPesanan> findByPesananId(Integer idPesanan) {
+        return List.of();
+    }
+
+    public Persediaan updateStokDanPilihGudang(RincianPesanan rincianPesanan) {
+        List<Persediaan> persediaanList = persediaanRepository.findByProduk(rincianPesanan.getIdProduk());
+        int jumlahPesanan = rincianPesanan.getJumlah();
+        Persediaan gudangDipilih = null;
+        for (Persediaan p : persediaanList) {
+            if (jumlahPesanan <= 0) break;
+            if (p.getJumlah() >= jumlahPesanan) {
+                persediaanRepository.updateStokById(p.getIdProduk(), jumlahPesanan, p.getIdGudang());
+                if (gudangDipilih == null) gudangDipilih = p;
+                jumlahPesanan = 0;
+            } else {
+                persediaanRepository.updateStokById(p.getIdProduk(), p.getJumlah(), p.getIdGudang());
+                if (gudangDipilih == null) gudangDipilih = p;
+                jumlahPesanan -= p.getJumlah();
+            }
+        }
+        if (jumlahPesanan > 0) {
+            throw new IllegalStateException("Stok tidak cukup untuk produk " + rincianPesanan.getIdProduk());
+        }
+        return gudangDipilih;
     }
 
     @Override
@@ -45,26 +82,19 @@ public class RincianPesananServiceImpl implements RincianPesananService{
 
         pesananRepository.addPesanan(pesanan);
 
-        for (RincianPesanan d : items) {
-            d.setIdPesanan(pesanan.getId());
-            d.setHarga(produkRepository.getHargaById(d.getIdProduk()));
-            rincianPesananRepository.addRincianPesanan(d);
+        for (RincianPesanan rincianPesanan : items) {
+            rincianPesanan.setIdPesanan(pesanan.getId());
+            rincianPesanan.setHarga(produkRepository.getHargaById(rincianPesanan.getIdProduk()));
+            rincianPesananRepository.addRincianPesanan(rincianPesanan);
 
-            List<Persediaan> persediaanList = persediaanRepository.findByProduk(d.getIdProduk());
-            int sisa = d.getJumlah();
-            for (Persediaan p : persediaanList) {
-                if (sisa <= 0) break;
-                if (p.getJumlah() >= sisa) {
-                    persediaanRepository.updateStokById(p.getIdProduk(), sisa, p.getIdGudang());
-                    sisa = 0;
-                } else {
-                    persediaanRepository.updateStokById(p.getIdProduk(), p.getJumlah(), p.getIdGudang());
-                    sisa -= p.getJumlah();
-                }
-            }
-            if (sisa > 0) {
-                throw new IllegalStateException("Stok tidak cukup untuk produk " + d.getIdProduk());
-            }
+            Persediaan gudangDipilih = updateStokDanPilihGudang(rincianPesanan);
+
+            Pengiriman pengiriman = new Pengiriman();
+            pengiriman.setIdPesanan(pesanan.getId());
+            pengiriman.setIdGudang(gudangDipilih.getIdGudang());
+            pengiriman.setStatus("DIPROSES");
+            pengiriman.setTanggalPengiriman(null);
+            pengirimanRepository.add(pengiriman);
         }
     }
 }
